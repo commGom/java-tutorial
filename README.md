@@ -165,3 +165,74 @@ public class AnnoymousInnerTest {
 
 
 ```
+
+## Chap 02. 람다식(Lambda expression)
+- 함수형 프로그래밍
+- 함수가 외부에 있는 변수를 사용하지 않고, 외부에 side effect을 발생시키지 않는다. 
+### 장점
+- 동시에 여러 함수가 호출되도 문제가 발생하지 않는다 (병렬처리 가능)
+- 똑같은 인풋이 들어갔을 때, 똑같은 아웃풋을 낸다.
+- 다양한 매개변수에 대하여 동일한 기능을 처리해준다. 
+
+### 문법((매개변수)->실행문)
+1. 람다식 표현
+2. 매개변수가 하나인 경우 괄호 생략, 실행문 한 줄인 경우 중괄호 생략
+3. 매개변수가 두 개 이상인 경우 괄호 필수
+4. return이 들어가면 중괄호 필수
+5. return 값만 나타낼 땐, return과 중괄호 둘 다 생략가능
+```plain
+
+1. (int x,int y)->{return x+y;}
+2. str->System.out.println(str);
+3. (x,y)->System.out.println(x+y)
+4. str ->{return str.length();}
+5. str -> str.length();
+
+```
+
+### 사용하는 경우
+1. interface로 정의해놓은 매서드 구현할 때
+```java
+package tutorial.chap02;
+
+public interface Add {
+    public  int add(int x,int y);
+}
+
+
+public class AddTest {
+   public static void main(String[] args) {
+      Add add = (x, y) -> {
+         return x + y;
+      };
+      int result = add.add(3, 2);
+      System.out.println("결과값:"+result);
+   }
+}
+
+
+```
+
+## Chap 03. 함수형 인터페이스와 람다식 구현하여 사용하기
+@FunctionalInterface    
+- 함수형 인터페이스를 의미하는 어노테이션
+- 메서드를 두 개 이상 선언하지 못한다.
+```java
+package tutorial.chap03;
+
+@FunctionalInterface    //메서드를 두 개 이상 선언하지 못한다.
+public interface MyNumber {
+   int getMax(int num1, int num2);
+}
+
+public class MyNumberTest {
+    public static void main(String[] args) {
+        MyNumber myNumber=(x,y)->{
+            return x>y?x:y;
+        };
+
+        System.out.println(myNumber.getMax(10,20));
+    }
+}
+
+```
