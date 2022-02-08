@@ -236,3 +236,92 @@ public class MyNumberTest {
 }
 
 ```
+
+## Chap 04. Stream
+- 연산들의 처리를 일관성 있게 자료를 처리할 수 있다. (자료 처리에 대한 추상화)
+### Stream 생성 방법
+1. 배열->스트림 : Arrays.stream(배열);
+2. 자료구조->스트림 
+### 특징
+1. 한 번 생성한 스트림은 그 스트림은 재사용할 수 없다.
+2. 자료를 하나씩 꺼내가면서 stream이 수행이 되기 때문에 자료가 소모된다.
+3. 다시 사용하기 위해서는 stream을 다시 생성하여야 한다. 
+
+### 종류
+1. 중간 연산 (여러 개의 연산 사용 가능, 최종적으로는 최종연산이 사용되어 소모한다)
+
+ex) filter(), map(), sorted()
+
+2. 지연 연산 (중간 연산에 대한 결과를 연산 중에는 알 수 없다)
+3. 최종 연산 (마지막에 한 번만 적용된다)
+
+ex) forEach(), count(), sum()
+```java
+
+        int[] arr = {1, 2, 3, 4, 5};
+        for (int num : arr) {
+            System.out.println(num);
+        }
+
+        Arrays.stream(arr).forEach(num-> System.out.print(num));
+        System.out.println();
+        IntStream stream = Arrays.stream(arr);
+        int sum = stream.sum();
+        System.out.println(sum);
+        //한 번 사용한 stream은 재사용 하지 못한다.
+
+```
+
+```java
+
+        List<String> sList = new ArrayList<>();
+        sList.add("Tomas");
+        sList.add("Edward");
+        sList.add("Jack");
+
+        Stream<String> stream = sList.stream();
+        stream.forEach(s -> System.out.println(s));
+        sList.stream().sorted().forEach(s-> System.out.print(s+"\t"));
+        System.out.println();
+        sList.stream().map(s -> s.length()).forEach(n -> System.out.print(n + "\t"));
+        System.out.println();
+        sList.stream().filter(s -> s.length() >= 5).forEach(s -> System.out.println(s));
+
+```
+
+### 4. reduce() 연산 
+: 정의된 연산이 아닌 프로그래머가 직접 구현한 연산을 적용할 수 있다. 
+
+### 스트림.reduce(초기값,람다식);
+```java
+
+package tutorial.chap04;
+
+import java.util.Arrays;
+import java.util.function.BinaryOperator;
+
+public class ReduceTest {
+    public static void main(String[] args) {
+        String greetings[] = {"안녕하세요~~~~", "hello", "Good Morning", "반갑습니다^^"};
+
+        System.out.println(Arrays.stream(greetings).reduce("",(s1,s2)->{
+            if (s1.getBytes().length>=s2.getBytes().length)
+                return s1;
+            else return s2;}
+        ));
+
+        String s = Arrays.stream(greetings).reduce(new CompareString()).get();
+        System.out.println(s);
+    }
+
+    }
+class  CompareString implements BinaryOperator<String>{
+    @Override
+    public String apply(String s1, String s2) {
+        if (s1.getBytes().length>=s2.getBytes().length)
+            return s1;
+        else return s2;
+    }
+}
+
+```
